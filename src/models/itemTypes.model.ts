@@ -10,6 +10,6 @@ const itemTypeSchema = new Schema<IItemType>({
   vars: [{ type: String, required: true }]
 })
 
-const itemTypes = model<IItemType>('itemTypes', itemTypeSchema);
+const ItemTypes = model<IItemType>('itemTypes', itemTypeSchema);
 
-export default itemTypes;
+export default ItemTypes;
