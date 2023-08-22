@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { ItemtypesService } from './services'
+import ItemTypes, { IItemType } from '@models/itemTypes.model'
+
+const service = new ItemtypesService<IItemType>(ItemTypes)
 
 /**
  * Return all entities
@@ -8,7 +11,7 @@ import { ItemtypesService } from './services'
  * @param next
  */
 export async function index(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const service = new ItemtypesService()
+  
 }
 
 /**
@@ -19,7 +22,7 @@ export async function index(req: Request, res: Response, next: NextFunction): Pr
  */
 export async function show(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id } = req.params
-  const service = new ItemtypesService()
+  
 }
 
 /**
@@ -29,7 +32,7 @@ export async function show(req: Request, res: Response, next: NextFunction): Pro
  * @param next
  */
 export async function store(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const service = new ItemtypesService()
+  
 }
 
 /**
@@ -40,7 +43,7 @@ export async function store(req: Request, res: Response, next: NextFunction): Pr
  */
 export async function update(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id } = req.params
-  const service = new ItemtypesService()
+  
 }
 
 /**
@@ -51,5 +54,5 @@ export async function update(req: Request, res: Response, next: NextFunction): P
  */
 export async function destroy(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id } = req.params
-  const service = new ItemtypesService()
+  
 }

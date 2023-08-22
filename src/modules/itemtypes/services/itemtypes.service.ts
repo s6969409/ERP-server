@@ -1,21 +1,3 @@
-export class ItemtypesService {
-  async findOne(id: any): Promise<Object> {
-    return {}
-  }
+import { MongoDBBaseService } from "@modules/vartypes/services";
 
-  async findAll(): Promise<Object[]> {
-    return []
-  }
-
-  async update(id: any, body: any): Promise<Object> {
-    return {}
-  }
-
-  async store(body: any): Promise<Object> {
-    return {}
-  }
-
-  async destroy(id: any): Promise<Object> {
-    return {}
-  }
-}
+export class ItemtypesService<T> extends MongoDBBaseService<T> { }

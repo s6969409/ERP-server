@@ -1,16 +1,12 @@
 import { ErrorHandler } from "@middlewares/error_handler";
-import { GenericData } from "@models/any.model";
-import VarTypes, { IVarType } from "@models/varTypes.model"
+import { Model } from "mongoose";
 
-const dataCheck = data=>{
-  data.selections = data.type == 'selection'?data.selections:[]
-  return data
-}
-
-export class VartypesService {
+export class MongoDBBaseService<T> {
+  protected model:Model<T>
+  constructor(model:Model<T>){this.model = model}
   async findOne(name: string): Promise<Object> {
     try {
-      const foundData = await VarTypes.findOne({ name });
+      const foundData = await this.model.findOne({ name });
 
       if (foundData) {
         return foundData;
@@ -24,18 +20,18 @@ export class VartypesService {
 
   async findAll(): Promise<ErrorHandler | Object> {
     try {
-      const allData = await VarTypes.find();
+      const allData = await this.model.find();
       return allData;
     } catch (error) {
       return new ErrorHandler(400, '查詢所有資料時發生錯誤。', { error });
     }
   }
 
-  async update(name: string, body: IVarType): Promise<Object> {
+  async update(name: string, body): Promise<Object> {
     try {
-      const updatedVarType = await VarTypes.findOneAndUpdate(
+      const updatedVarType = await this.model.findOneAndUpdate(
         { name },
-        dataCheck(body),
+        body,
         { new: true }
       );
 
@@ -49,12 +45,11 @@ export class VartypesService {
     }
   }
 
-  async store(body: IVarType | IVarType[]): Promise<Object> {
+  async store(body: T | T[]): Promise<Object> {
     try {
-      body = dataCheck(body)
       const createdData = Array.isArray(body)?
-      await VarTypes.insertMany(body):
-      await VarTypes.create(body);
+      await this.model.insertMany(body):
+      await this.model.create(body);
       return createdData;
     } catch (error) {
       return new ErrorHandler(400, '儲存資料時發生錯誤。', { error });
@@ -63,7 +58,7 @@ export class VartypesService {
 
   async destroy(name: string): Promise<Object> {
     try {
-      const deletedData = await VarTypes.findOneAndDelete({ name });
+      const deletedData = await this.model.findOneAndDelete({ name });
 
       if (deletedData) {
         return deletedData;
