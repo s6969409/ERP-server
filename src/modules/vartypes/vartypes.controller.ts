@@ -3,7 +3,7 @@ import { doResultHandler } from '@middlewares/express_validators'
 import { MongoDBBaseService } from './services'
 import VarTypes, { IVarType } from '@models/varTypes.model'
 
-class MongoDBBaseController {
+export class MongoDBBaseController {
   protected service: any
   constructor(service) { this.service = service }
   /**
