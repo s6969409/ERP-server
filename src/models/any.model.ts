@@ -9,4 +9,4 @@ const genericDataSchema = new Schema<any>({
   data: { type: Schema.Types.Mixed, required: true }
 });
 
-export const GenericData = model<IGenericData>('GenericData', genericDataSchema);
+export const GenericData = (collectionName: string) => model<IGenericData>(collectionName, genericDataSchema);

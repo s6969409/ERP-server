@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as Controller from './itemtypes.controller'
+import { Controller } from './itemtypes.controller'
 import { storeValidators, updateValidators } from './itemtypes.validator';
 import { validateBody } from '@middlewares/validator';
 
