@@ -6,12 +6,11 @@ export class ErrorHandler extends Error {
   message: string
   other?: object
 
-  constructor(statusCode: number, message: string, otherParams: object = {}) {
+  constructor(statusCode: number, message: string, otherParams: any = {}) {
     super()
     this.statusCode = statusCode
     this.message = message
     if (Object.keys(otherParams).length) this.other = otherParams
-
   }
 }
 

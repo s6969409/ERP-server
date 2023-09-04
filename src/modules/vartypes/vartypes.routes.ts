@@ -11,7 +11,7 @@ router.get('/:name', Controller.show)
 //
 router.post('/', [...storeValidators, validateBody], Controller.store)
 //
-router.put('/:name', [...updateValidators, validateBody], Controller.update)
+router.put('/', [...updateValidators, validateBody], Controller.update)
 //
 router.delete('/:name', Controller.destroy)
 

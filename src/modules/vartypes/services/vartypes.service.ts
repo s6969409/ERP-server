@@ -3,7 +3,11 @@ import { Model } from "mongoose";
 
 export class MongoDBBaseService<T> {
   protected model: Model<T>
-  constructor(model: Model<T>) { this.model = model }
+  protected validator
+  constructor(model: Model<T>, validator = vars => vars) {
+    this.model = model
+    this.validator = validator
+  }
   findOne = async (name: string): Promise<Object> => {
     try {
       const foundData = await this.model.findOne({ name });
@@ -13,8 +17,8 @@ export class MongoDBBaseService<T> {
       } else {
         return new ErrorHandler(400, '找不到符合條件的資料。');
       }
-    } catch (error) {
-      return new ErrorHandler(400, '查詢資料時發生錯誤。', { error });
+    } catch (error: any) {
+      return new ErrorHandler(400, '查詢資料時發生錯誤。', { name: error.name, message: error.message });
     }
   }
 
@@ -22,16 +26,19 @@ export class MongoDBBaseService<T> {
     try {
       const allData = await this.model.find();
       return allData;
-    } catch (error) {
-      return new ErrorHandler(400, '查詢所有資料時發生錯誤。', { error });
+    } catch (error: any) {
+      return new ErrorHandler(400, '查詢所有資料時發生錯誤。', { name: error.name, message: error.message });
     }
   }
 
-  update = async (name: string, body): Promise<Object> => {
+  update = async (body): Promise<Object> => {
     try {
+      console.log(body)
+      const data = await this.validator(body)
+      if (data instanceof Error) return data;
       const updatedVarType = await this.model.findOneAndUpdate(
-        { name },
-        body,
+        { name: body.name },
+        data,
         { new: true }
       );
 
@@ -40,8 +47,8 @@ export class MongoDBBaseService<T> {
       } else {
         return new ErrorHandler(400, '找不到符合條件的資料。');
       }
-    } catch (error) {
-      return new ErrorHandler(400, '更新資料時發生錯誤。', { error });
+    } catch (error: any) {
+      return new ErrorHandler(400, '更新資料時發生錯誤。', { name: error.name, message: error.message });
     }
   }
 
@@ -51,8 +58,8 @@ export class MongoDBBaseService<T> {
         await this.model.insertMany(body) :
         await this.model.create(body);
       return createdData;
-    } catch (error) {
-      return new ErrorHandler(400, '儲存資料時發生錯誤。', { error });
+    } catch (error: any) {
+      return new ErrorHandler(400, '儲存資料時發生錯誤。', { name: error.name, message: error.message });
     }
   }
 
@@ -65,8 +72,8 @@ export class MongoDBBaseService<T> {
       } else {
         return new ErrorHandler(400, '找不到符合條件的資料。');
       }
-    } catch (error) {
-      return new ErrorHandler(400, '刪除資料時發生錯誤。', { error });
+    } catch (error: any) {
+      return new ErrorHandler(400, '刪除資料時發生錯誤。', { name: error.name, message: error.message });
     }
   }
 }

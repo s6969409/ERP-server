@@ -47,8 +47,7 @@ export class MongoDBBaseController {
    * @param next
    */
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { name } = req.params
-    const result = await this.service.update(name, req.body)
+    const result = await this.service.update(req.body)
     doResultHandler(result, req, res, next)
   }
 
