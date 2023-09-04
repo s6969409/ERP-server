@@ -4,7 +4,8 @@ import { Model } from "mongoose";
 export class MongoDBBaseService<T> {
   protected model: Model<T>
   protected validator
-  constructor(model: Model<T>, validator = vars => vars) {
+  protected FCa: Promise<T>
+  constructor(model: Model<T>, validator = data => data) {
     this.model = model
     this.validator = validator
   }
@@ -33,17 +34,16 @@ export class MongoDBBaseService<T> {
 
   update = async (body): Promise<Object> => {
     try {
-      console.log(body)
       const data = await this.validator(body)
       if (data instanceof Error) return data;
-      const updatedVarType = await this.model.findOneAndUpdate(
+      const updatedData = await this.model.findOneAndUpdate(
         { name: body.name },
         data,
         { new: true }
       );
 
-      if (updatedVarType) {
-        return updatedVarType;
+      if (updatedData) {
+        return updatedData;
       } else {
         return new ErrorHandler(400, '找不到符合條件的資料。');
       }
@@ -54,10 +54,13 @@ export class MongoDBBaseService<T> {
 
   store = async (body: T | T[]): Promise<Object> => {
     try {
-      const createdData = Array.isArray(body) ?
-        await this.model.insertMany(body) :
-        await this.model.create(body);
-      return createdData;
+      if (Array.isArray(body)) {
+        const data = body.map(t => this.validator(t))
+        return await this.model.insertMany(data)
+      } else {
+        const data = await this.validator(body)
+        return await this.model.create(data);
+      }
     } catch (error: any) {
       return new ErrorHandler(400, '儲存資料時發生錯誤。', { name: error.name, message: error.message });
     }
